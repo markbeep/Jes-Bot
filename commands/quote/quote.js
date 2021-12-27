@@ -1,4 +1,4 @@
-const Command = require("../../mods/commandClass");
+const Command = require("../../lib/commandClass");
 const all = require("./all");
 const add = require("./add");
 const get = require("./get");

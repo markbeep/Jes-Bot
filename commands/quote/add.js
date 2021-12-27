@@ -1,6 +1,6 @@
-const Command = require("../../mods/commandClass");
+const Command = require("../../lib/commandClass");
 const { QuoteModel } = require("./quoteModel");
-const { error, success } = require("../../mods/embedTemplates");
+const { error, success } = require("../../lib/embedTemplates");
 
 const add = new Command();
 

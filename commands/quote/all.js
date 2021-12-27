@@ -1,7 +1,7 @@
 const { MessageEmbed } = require("discord.js");
-const Command = require("../../mods/commandClass");
+const Command = require("../../lib/commandClass");
 const { QuoteModel, sequelize } = require("./quoteModel");
-const { error, success, quoteEmbed } = require("../../mods/embedTemplates");
+const { error, success, quoteEmbed } = require("../../lib/embedTemplates");
 
 const all = new Command();
 
