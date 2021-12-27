@@ -1,4 +1,4 @@
-const commands = require("../commands");
+const commands = require("../commands");  // all commands as an object
 const { prefix } = require("../config.json");
 
 /*
@@ -9,7 +9,11 @@ const { prefix } = require("../config.json");
  */
 const aliases = generateAliases(commands);
 
-function commandHandler(message, client) {
+/*
+ * Takes in a message object and correctly orders it to a message
+ * if applicable.
+ */
+async function commandHandler(message, client) {
     // if message author is bot
     if (message.author.bot) return;
 
@@ -28,6 +32,9 @@ function commandHandler(message, client) {
     command.command(message, newArgs);
 }
 
+/*
+ * Recursively determines the correct command object with the given input arguments
+ */
 function getCommandObject(cmd, args, aliases, commands) {
     let alias = aliases[cmd];
     if (alias == undefined) return { command: null, args: null };  // invalid command in this scope
@@ -40,6 +47,9 @@ function getCommandObject(cmd, args, aliases, commands) {
     return { command, args };
 }
 
+/*
+ * Links up all aliases to lead to their correct command recursively
+ */
 function generateAliases(cmds) {
     if (cmds == null) return {};
     let aliases = {};

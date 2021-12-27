@@ -1,11 +1,13 @@
 const Command = require("../../mods/commandClass");
 const all = require("./all");
+const add = require("./add");
+const QuoteModel = require("./quoteModel");
 
 const quote = new Command();
 quote.aliases = ["q"];
-quote.subcommands = { all };
+quote.subcommands = { all, add };
 
-quote.command = (msg, args) => {
+quote.command = async function (msg, args) {
     msg.channel.send({ content: "This sends a random quote" });
 }
 

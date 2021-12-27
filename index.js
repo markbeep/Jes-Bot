@@ -9,7 +9,7 @@ const { token } = require("./config.json");
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
-client.once("ready", () => console.log("Bot Successfully started up!"));
+client.once("ready", () => console.log("\033[92m✓\033[3;94m Jes\033[0m successfully started up! \033[92m✓\033[0m"));
 
 client.on("messageCreate", message => commandHandler(message, client));
 
