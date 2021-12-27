@@ -14,3 +14,5 @@ Insert the bot token you got from [Discord Developers](https://discord.com/devel
 }
 ```
 5. Run `node .` again. This will start the bot for real and you're done!
+
+:)
