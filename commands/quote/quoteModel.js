@@ -1,10 +1,9 @@
 const { Sequelize, DataTypes } = require("sequelize");
+const { debug } = require("../../config.json");
 
-const sequelize = new Sequelize({
-    dialect: "sqlite",
-    storage: "./data/quotes.sqlite",
-    logging: console.log
-});
+let type = { dialect: "sqlite", storage: "./data/quotes.sqlite" }
+type.logging = (debug) ? console.log : false;
+const sequelize = new Sequelize(type);
 
 const QuoteModel = sequelize.define("Quotes", {
     quoteId: {
@@ -12,7 +11,7 @@ const QuoteModel = sequelize.define("Quotes", {
         autoIncrement: true,
         primaryKey: true,
     },
-    quote: DataTypes.STRING,
+    quote: DataTypes.TEXT,
     name: DataTypes.STRING,
     userId: DataTypes.INTEGER,
     addedByUserId: DataTypes.INTEGER,
@@ -21,4 +20,4 @@ const QuoteModel = sequelize.define("Quotes", {
 
 sequelize.sync();
 
-module.exports = QuoteModel;
+module.exports = { QuoteModel, sequelize };

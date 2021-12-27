@@ -1,7 +1,7 @@
 module.exports = class Command {
-    command = null;
-    aliases = null;
-    subcommands = null;
-    parent = null;
-    aliasesDict = null;  // RESERVED for quick alias referencing
+    command;
+    aliases;
+    subcommands;
+    description;
+    aliasesDict;  // RESERVED for quick alias referencing
 }

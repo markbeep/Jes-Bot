@@ -5,7 +5,7 @@ const { exit } = require("process");
 module.exports = function checkFiles() {
     let wrote = { config: false, db: false };
     if (!fs.existsSync("./config.json")) {
-        fs.writeFileSync("./config.json", JSON.stringify({ token: "", prefix: ";" }, null, 4));
+        fs.writeFileSync("./config.json", JSON.stringify({ token: "", prefix: ";", debug: false }, null, 4));
         wrote.config = true;
     }
     if (Object.values(wrote).some(e => e)) {
