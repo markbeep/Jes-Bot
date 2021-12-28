@@ -10,7 +10,11 @@ quote.aliases = ["q"];
 quote.subcommands = { all, add, get, getRandom };
 
 quote.command = async function (msg, args) {
-    msg.channel.send({ content: "This sends a random quote" });
+    if (args.length === 0) {
+        getRandom.command(msg, args);
+        return;
+    }
+    msg.channel.send({ content: "This part isn't correctly implemented yet." });
 }
 
 module.exports = quote;

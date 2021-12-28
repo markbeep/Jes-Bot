@@ -2,6 +2,7 @@ const { MessageEmbed } = require("discord.js");
 const Command = require("../../lib/commandClass");
 const { QuoteModel, sequelize } = require("./quoteModel");
 const { error, success, quoteEmbed } = require("../../lib/embedTemplates");
+const Page = require("./quotePage");
 
 const all = new Command();
 
@@ -32,13 +33,8 @@ all.command = async function (msg, args) {
         msg.channel.send({ embeds: [error(`The user \`${name}\` doesn't have any quotes`)] })
         return;
     }
-    let content = quotes.map((e, i) => `**${i + 1}:** ${e.quote} [ID: \`${e.quoteId}\`]`).join("\n");
-    const embed = new MessageEmbed()
-        .setColor("#eeac60")
-        .setTitle("All Quotes")
-        .setDescription(content);
-    msg.channel.send({ embeds: [embed] });
-
+    let p = new Page(msg, quotes, "All Quotes", "Hello");
+    p.start();
 }
 
 module.exports = all;
