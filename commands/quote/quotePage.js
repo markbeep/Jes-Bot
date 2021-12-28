@@ -37,12 +37,12 @@ module.exports = class Page {
                 new MessageButton()
                     .setCustomId("firstPageButton")
                     .setLabel("<<")
-                    .setStyle("SECONDARY")
+                    .setStyle((this.pageCount === 0) ? "SECONDARY" : "PRIMARY")
                     .setDisabled(this.pageCount === 0),
                 new MessageButton()
                     .setCustomId("leftPageButton")
                     .setLabel("<")
-                    .setStyle("SECONDARY")
+                    .setStyle((this.pageCount === 0) ? "SECONDARY" : "PRIMARY")
                     .setDisabled(this.pageCount === 0),
                 new MessageButton()
                     .setCustomId("closePageButton")
@@ -51,12 +51,12 @@ module.exports = class Page {
                 new MessageButton()
                     .setCustomId("rightPageButton")
                     .setLabel(">")
-                    .setStyle("SECONDARY")
+                    .setStyle((this.pageCount === this.pages.length - 1) ? "SECONDARY" : "PRIMARY")
                     .setDisabled(this.pageCount === this.pages.length - 1),
                 new MessageButton()
                     .setCustomId("lastPageButton")
                     .setLabel(">>")
-                    .setStyle("SECONDARY")
+                    .setStyle((this.pageCount === this.pages.length - 1) ? "SECONDARY" : "PRIMARY")
                     .setDisabled(this.pageCount === this.pages.length - 1),
             )
     }
@@ -72,8 +72,12 @@ module.exports = class Page {
             case "leftPageButton": this.pageCount--; break;
             case "rightPageButton": this.pageCount++; break;
             case "lastPageButton": this.pageCount = this.pages.length - 1; break;
-            default: collector.stop();
+            default: {
+                collector.stop();
+                return;
+            };
         }
+        i.update({ embeds: [this.#getPageEmbed()], components: [this.#getPageButtons()] });
     }
 }
 
@@ -88,9 +92,9 @@ function createPages(quotesList) {
             break;
         }
         // Looks for the last linebreak to make a break at
-        let lastIndex = content.lastIndexOf("\n");
+        let lastIndex = content.lastIndexOf("\n", 1000);
         if (lastIndex === -1) {  // there's no linebreak
-            lastIndex = content.lastIndexOf(" ");
+            lastIndex = content.lastIndexOf(" ", 1000);
             if (lastIndex === -1) { // there's no space
                 pages.push(content.slice(0, 1000));
                 content = content.slice(1000);
@@ -103,4 +107,5 @@ function createPages(quotesList) {
     return pages;
 }
 
-const cleanupQuoteString = quoteText => quoteText.replace(/\*/g, "").replace(/~/g, "").replace(/\\/g, "").replace(/`/g, "").replace(/||/g, "");
+// removes all *, ~, \, ~, || and if there are multiple linebreaks, they are turned into a single one
+const cleanupQuoteString = quoteText => quoteText.replace(/\*/g, "").replace(/~/g, "").replace(/\\/g, "").replace(/`/g, "").replace(/||/g, "").replace(/(\n){2,}/gm, "\n").trim();

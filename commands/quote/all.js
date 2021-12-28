@@ -1,7 +1,6 @@
-const { MessageEmbed } = require("discord.js");
 const Command = require("../../lib/commandClass");
-const { QuoteModel, sequelize } = require("./quoteModel");
-const { error, success, quoteEmbed } = require("../../lib/embedTemplates");
+const { QuoteModel } = require("./quoteModel");
+const { error } = require("../../lib/embedTemplates");
 const Page = require("./quotePage");
 
 const all = new Command();
@@ -11,7 +10,8 @@ all.command = async function (msg, args) {
         msg.channel.send({ embeds: [error(`No mention or name given to fetch quotes from`)] })
         return;
     }
-    const member = msg.mentions.members.first();
+    let member = msg.mentions.members.first();
+    if (member == undefined) member = await msg.guild.members.cache.get(args[0]);
     const name = (member == undefined) ? args[0] : member.user.username;
     let quotes;
     if (member == undefined) {
@@ -33,7 +33,7 @@ all.command = async function (msg, args) {
         msg.channel.send({ embeds: [error(`The user \`${name}\` doesn't have any quotes`)] })
         return;
     }
-    let p = new Page(msg, quotes, "All Quotes", "Hello");
+    let p = new Page(msg, quotes, "All Quotes", `All quotes from ${name}:`);
     p.start();
 }
 

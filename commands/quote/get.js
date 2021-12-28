@@ -1,6 +1,6 @@
 const Command = require("../../lib/commandClass");
-const { QuoteModel, sequelize } = require("./quoteModel");
-const { error, success, quoteEmbed } = require("../../lib/embedTemplates");
+const { QuoteModel } = require("./quoteModel");
+const { error, quoteEmbed } = require("../../lib/embedTemplates");
 
 const get = new Command();
 

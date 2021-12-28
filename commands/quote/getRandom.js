@@ -1,13 +1,14 @@
 const Command = require("../../lib/commandClass");
 const { QuoteModel, sequelize } = require("./quoteModel");
-const { error, success, quoteEmbed } = require("../../lib/embedTemplates");
+const { error, quoteEmbed } = require("../../lib/embedTemplates");
 
 const getRandom = new Command();
 
 getRandom.command = async function (msg, args) {
     let quote;
     if (args.length > 0) {  // get random from user
-        const member = msg.mentions.members.first();
+        let member = msg.mentions.members.first();
+        if (member == undefined) member = await msg.guild.members.cache.get(args[0]);
         const name = (member == undefined) ? args[0] : member.user.username;
         if (member == undefined) {  // its not a mention
             quote = await QuoteModel.findOne({
