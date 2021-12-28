@@ -14,3 +14,6 @@ Insert the bot token you got from [Discord Developers](https://discord.com/devel
 }
 ```
 5. Run `node .` again. This will start the bot for real and you're done!
+
+>Additionally add the ID of a reaction which will be added to quotes being added by reactions to signal that the message was quoted in the config. Example in the `config.json`:  
+`"addedQuoteId": "840985556304265237"`

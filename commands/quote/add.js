@@ -1,6 +1,7 @@
 const Command = require("../../lib/commandClass");
 const { QuoteModel } = require("./quoteModel");
 const { error, success } = require("../../lib/embedTemplates");
+const { addedQuoteId } = require("../../config.json");
 
 const add = new Command();
 
@@ -40,7 +41,7 @@ add.command = async function (msg, args, quoteAdder = null, sendMessage = true) 
         quote: quote,
     });
     sendMessage && msg.channel.send({ embeds: [success(`Successfully added the quote ID \`${addedQuote.quoteId}\` to \`${name}\``)] });
-    if (!sendMessage) msg.react("840985556304265237").catch(() => console.log("INFO: Do not have a \"addedQuote\" emoji setup to react with."));
+    if (!sendMessage) msg.react(addedQuoteId).catch(() => console.log("INFO: Do not have a \"addedQuote\" emoji setup to react with."));
 }
 
 module.exports = add;
