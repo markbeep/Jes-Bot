@@ -2,8 +2,10 @@ module.exports = class Command {
     command;
     aliases;
     subcommands;
-    description;
-    // required, as the help command gets treated differently by the command handler
-    isHelpCommand = false;
+    usage = "";
+    description = "";
     aliasesDict;  // RESERVED for quick alias referencing
+    // Path to a command: ex.: quote all => ["quote", "all"]
+    commandPath = [];  // RESERVED, gets generated on its own
+    helpEmbed; // RESERVED, stores the help embed for the command
 }

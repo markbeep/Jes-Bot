@@ -1,3 +1,3 @@
-const help = require("./help");
+const { help } = require("./help");
 
 module.exports = help;

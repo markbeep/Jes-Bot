@@ -8,7 +8,6 @@ const deleteQuote = require("./deleteQuote");
 const quote = new Command();
 quote.aliases = ["q"];
 quote.subcommands = { all, add, get, getRandom, deleteQuote };
-quote.description = ``
 quote.usage = `[Quote ID | Name | <Subcommand>]`
 
 quote.command = async function (msg, args) {

@@ -2,6 +2,8 @@ const commands = require("../../commands");  // all commands as an object
 const { prefix } = require("../../config.json");
 const getCommandObject = require("./getCommandObject");
 const generateAliases = require("./generateAliases");
+const generatePaths = require("./generatePaths");
+const { setupHelp } = require("../../commands/help/help");
 
 /*
  * Dictionary of all top level aliases to their corresponding command
@@ -10,6 +12,8 @@ const generateAliases = require("./generateAliases");
  * but into an attribute of each command called "aliasesDict"
  */
 const aliases = generateAliases(commands);
+generatePaths(commands);
+setupHelp(commands, aliases);
 
 /*
  * Takes in a message object and correctly orders it to a message
@@ -30,11 +34,7 @@ async function commandHandler(message, client) {
     else args = args.map(e => e.trim()).join("\n").trim().split(" ");
     const { command, args: newArgs } = getCommandObject(cmd, args, aliases, commands);
     if (command == null) return;  // this was not a correct command
-    // the help command gets all the commands passed down as well
-    if (command.isHelpCommand)
-        command.command(message, newArgs, aliases, commands);
-    else
-        command.command(message, newArgs);
+    command.command(message, newArgs);
 }
 
 module.exports = { commandHandler, commands, aliases };
