@@ -1,6 +1,6 @@
-const Command = require("../../lib/commandClass");
+const Command = require("../../utils/commandClass");
 const { QuoteModel } = require("./quoteModel");
-const { error } = require("../../lib/embedTemplates");
+const { error } = require("../../utils/embedTemplates");
 const Page = require("./quotePage");
 
 const all = new Command();

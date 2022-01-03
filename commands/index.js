@@ -7,5 +7,6 @@
  */
 
 const quote = require("./quote");
+const help = require("./help");
 
-module.exports = { quote };
+module.exports = { quote, help };

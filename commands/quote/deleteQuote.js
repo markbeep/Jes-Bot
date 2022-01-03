@@ -1,6 +1,6 @@
-const Command = require("../../lib/commandClass");
+const Command = require("../../utils/commandClass");
 const { QuoteModel } = require("./quoteModel");
-const { error, success } = require("../../lib/embedTemplates");
+const { error, success } = require("../../utils/embedTemplates");
 const { Permissions } = require("discord.js");
 
 const deleteQuote = new Command();

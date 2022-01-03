@@ -8,11 +8,11 @@
 ░╚════╝░╚══════╝╚═════╝░  ╚═════╝░░╚════╝░░░░╚═╝░░░
 */
 
-const checkFiles = require("./lib/firstStartup");
+const checkFiles = require("./utils/firstStartup");
 checkFiles();  // makes sure all the needed files are here
 
 const { Client, Intents } = require("discord.js");
-const { commandHandler } = require("./lib/commandHandler");
+const { commandHandler } = require("./utils/commandHandler");
 const handleReaction = require("./commands/quote/handleReaction");
 
 const { token } = require("./config.json");
