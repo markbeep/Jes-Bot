@@ -4,6 +4,7 @@ const getCommandObject = require("./getCommandObject");
 const generateAliases = require("./generateAliases");
 const generatePaths = require("./generatePaths");
 const { setupHelp } = require("../../commands/help/help");
+const { error } = require("../embedTemplates");
 
 /*
  * Dictionary of all top level aliases to their corresponding command
@@ -41,6 +42,11 @@ async function commandHandler(message, client) {
         let red = "\033[91m";
         let esc = "\033[0m";
         console.error(`${red}ERROR${esc}\t${e.stack}`);
+        // send the error in the channel
+        try {
+            let sentMessage = await message.channel.send({ embeds: [error(`**${e.name}**\n\`${e.message}\``)] })
+            setTimeout(() => sentMessage.delete().catch(_ => _), 10e3);
+        } catch (e) { }  // couldnt sent the error message, just ignore it
     }
 }
 
