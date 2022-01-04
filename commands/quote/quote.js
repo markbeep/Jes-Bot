@@ -1,6 +1,6 @@
 const Command = require("../../utils/commandClass");
 const all = require("./all");
-const add = require("./add");
+const { add, setBlackListedWords } = require("./add");
 const get = require("./get");
 const getRandom = require("./getRandom");
 const deleteQuote = require("./deleteQuote");
@@ -8,6 +8,7 @@ const deleteQuote = require("./deleteQuote");
 const quote = new Command();
 quote.aliases = ["q"];
 quote.subcommands = { all, add, get, getRandom, deleteQuote };
+setBlackListedWords(quote.subcommands);  // ensures that not quote commands are used as quote names
 quote.usage = `[Quote ID | Name | <Subcommand>]`
 
 quote.command = async function (msg, args) {

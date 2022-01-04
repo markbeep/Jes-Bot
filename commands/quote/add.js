@@ -5,7 +5,14 @@ const { addedQuoteId } = require("../../config.json");
 
 const add = new Command();
 
-const blacklistedWords = ["add", "get", "all", "getRandom"];
+let blacklistedWords = [];
+function setBlackListedWords(commands) {
+    Object.keys(commands).forEach(key => {
+        blacklistedWords.push(key);
+        if (commands[key].subcommands != null)
+            setBlackListedWords(commands[key].subcommands);
+    });
+}
 
 /*
  * Adds a quote to a user
@@ -24,9 +31,13 @@ add.command = async function (msg, args, quoteAdder = null, sendMessage = true) 
     const name = (member == undefined) ? args[0] : member.user.username;
     const userId = (member == undefined) ? null : member.id;
     const quote = args.slice(1).join(" ");
+    if (quote.length > 1024) {
+        msg.channel.send({ embeds: [error("Quote is too long. Max quote length is currently `1024` characters.")] });
+        return;
+    }
     // can't add quotes to people with names of commands
     if (member == undefined && blacklistedWords.includes(name)) {
-        sendMessage && msg.channel.send({ embeds: [error(`Can't add quotes to names of commands:\`${name}\``)] });
+        sendMessage && msg.channel.send({ embeds: [error(`Can't add quotes to names of commands: \`${name}\``)] });
         return;
     }
     if (member != undefined && (member.id == msg.author.id || member.id == msg.author.id)) {
@@ -44,4 +55,4 @@ add.command = async function (msg, args, quoteAdder = null, sendMessage = true) 
     if (!sendMessage) msg.react(addedQuoteId).catch(() => console.log("INFO: Do not have a \"addedQuote\" emoji setup to react with."));
 }
 
-module.exports = add;
+module.exports = { add, setBlackListedWords };

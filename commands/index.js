@@ -8,5 +8,6 @@
 
 const quote = require("./quote");
 const help = require("./help");
+const ping = require("./ping");
 
-module.exports = { quote, help };
+module.exports = { quote, help, ping };

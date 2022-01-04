@@ -15,6 +15,11 @@ const quoteEmbed = (quote) => new MessageEmbed()
     .setDescription(quote.quote)
     .setFooter(`-${quote.name}, ${formatDate(quote.createdAt)} | Quote ID: ${quote.quoteId}`);
 
+const basic = (title, desc, color = "#808080") => new MessageEmbed()
+    .setColor(color)
+    .setTitle(title)
+    .setDescription(desc);
+
 const formatDate = (date) => `${date.getUTCDate()}.${date.getUTCMonth()} ${date.getUTCFullYear()}`;
 
-module.exports = { error, success, quoteEmbed };
+module.exports = { error, success, quoteEmbed, basic };

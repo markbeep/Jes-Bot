@@ -11,7 +11,7 @@ module.exports = function checkFiles() {
     }
     if (Object.values(wrote).some(e => e)) {
         console.log("\033[4m\nNew files have been created:\033[0m");
-        wrote.config && console.log("\t- \033[91mconfig.json\033[0m");
+        wrote.config && console.log("\t- \033[91mconfig.json \033[92m(ADD YOUR BOT TOKEN)\033[0m");
         exit();
     }
     // if enabled, fetches from git and checks for updates
