@@ -17,14 +17,14 @@ help.command = async function (msg, args) {
     if (args.length > 0) {
         let { command: cmd, args: newArgs } = getCommandObject(args[0], args.slice(1), aliases, commands);
         if (cmd == null) {
-            msg.channel.send({ embeds: [error(`The command \`${args.join(" ").slice(0, 20)}\` does not exist.`)] })
+            await msg.channel.send({ embeds: [error(`The command \`${args.join(" ").slice(0, 20)}\` does not exist.`)] })
             return;
         }
-        msg.channel.send({ embeds: [cmd.helpEmbed] });
+        await msg.channel.send({ embeds: [cmd.helpEmbed] });
         return;
     }
     // send all commands
-    msg.channel.send({ embeds: [helpPageEmbed] });
+    await msg.channel.send({ embeds: [helpPageEmbed] });
 }
 
 /*

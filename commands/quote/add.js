@@ -23,7 +23,7 @@ function setBlackListedWords(commands) {
  */
 add.command = async function (msg, args, quoteAdder = null, sendMessage = true) {
     if (sendMessage && args < 2) {
-        msg.channel.send({ embeds: [error("To add a quote you need a `name` and the `quote`. You're missing those.")] });
+        await msg.channel.send({ embeds: [error("To add a quote you need a `name` and the `quote`. You're missing those.")] });
         return;
     }
     let member = msg.mentions.members.first();
@@ -32,16 +32,16 @@ add.command = async function (msg, args, quoteAdder = null, sendMessage = true) 
     const userId = (member == undefined) ? null : member.id;
     const quote = args.slice(1).join(" ");
     if (quote.length > 1024) {
-        msg.channel.send({ embeds: [error("Quote is too long. Max quote length is currently `1024` characters.")] });
+        await msg.channel.send({ embeds: [error("Quote is too long. Max quote length is currently `1024` characters.")] });
         return;
     }
     // can't add quotes to people with names of commands
     if (member == undefined && blacklistedWords.includes(name)) {
-        sendMessage && msg.channel.send({ embeds: [error(`Can't add quotes to names of commands: \`${name}\``)] });
+        sendMessage && await msg.channel.send({ embeds: [error(`Can't add quotes to names of commands: \`${name}\``)] });
         return;
     }
     if (member != undefined && (member.id == msg.author.id || member.id == msg.author.id)) {
-        sendMessage && msg.channel.send({ embeds: [error(`Can't add quotes to yourself.`)] });
+        sendMessage && await msg.channel.send({ embeds: [error(`Can't add quotes to yourself.`)] });
         return;
     }
     const addedQuote = await QuoteModel.create({
@@ -51,7 +51,7 @@ add.command = async function (msg, args, quoteAdder = null, sendMessage = true) 
         guildId: msg.guild.id,
         quote: quote,
     });
-    sendMessage && msg.channel.send({ embeds: [success(`Successfully added the quote ID \`${addedQuote.quoteId}\` to \`${name}\``)] });
+    sendMessage && await msg.channel.send({ embeds: [success(`Successfully added the quote ID \`${addedQuote.quoteId}\` to \`${name}\``)] });
     if (!sendMessage) msg.react(addedQuoteId).catch(() => console.log("INFO: Do not have a \"addedQuote\" emoji setup to react with."));
 }
 

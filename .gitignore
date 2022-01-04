@@ -1,4 +1,4 @@
 node_modules
-config.json
+*config.json
 tempCodeRunnerFile.js
 data/quotes.sqlite

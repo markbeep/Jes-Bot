@@ -8,7 +8,7 @@ const all = new Command();
 
 all.command = async function (msg, args) {
     if (args.length === 0) {
-        msg.channel.send({ embeds: [error(`No mention or name given to fetch quotes from`)] })
+        await msg.channel.send({ embeds: [error(`No mention or name given to fetch quotes from`)] })
         return;
     }
     let member = msg.mentions.members.first();
@@ -31,7 +31,7 @@ all.command = async function (msg, args) {
         });
     }
     if (quotes.length === 0) {
-        msg.channel.send({ embeds: [error(`The user \`${name}\` doesn't have any quotes`)] })
+        await msg.channel.send({ embeds: [error(`The user \`${name}\` doesn't have any quotes`)] })
         return;
     }
     let p = new Page(msg, quotes, "All Quotes", `All quotes from ${name}:`);

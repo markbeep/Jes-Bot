@@ -6,7 +6,7 @@ const get = new Command();
 
 get.command = async function (msg, args) {
     if (args.length < 1) {
-        msg.channel.send({ embeds: [error("No `Quote ID` given")] });
+        await msg.channel.send({ embeds: [error("No `Quote ID` given")] });
         return;
     }
     const quote = await QuoteModel.findOne({
@@ -16,10 +16,10 @@ get.command = async function (msg, args) {
         }
     });
     if (quote == null) {
-        msg.channel.send({ embeds: [error(`No Quote found with the given ID`)] });
+        await msg.channel.send({ embeds: [error(`No Quote found with the given ID`)] });
         return;
     }
-    msg.channel.send({ embeds: [quoteEmbed(quote)] });
+    await msg.channel.send({ embeds: [quoteEmbed(quote)] });
 
 }
 

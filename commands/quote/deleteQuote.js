@@ -8,11 +8,11 @@ deleteQuote.aliases = ["del", "delete"];
 
 deleteQuote.command = async function (msg, args) {
     if (!msg.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
-        msg.channel.send({ embeds: [error("You don't have permissions to delete quotes. Requires `ADMINISTRATOR`.")] });
+        await msg.channel.send({ embeds: [error("You don't have permissions to delete quotes. Requires `ADMINISTRATOR`.")] });
         return;
     };
     if (args.length === 0) {
-        msg.channel.send({ embeds: [error("No quote ID given. Don't know what to delete.")] });
+        await msg.channel.send({ embeds: [error("No quote ID given. Don't know what to delete.")] });
         return;
     }
     const deleted = await QuoteModel.destroy({
@@ -21,8 +21,8 @@ deleteQuote.command = async function (msg, args) {
         },
         force: true
     });
-    if (deleted === 1) msg.channel.send({ embeds: [success(`Successfully delete quote with ID \`${args[0]}\``)] });
-    else msg.channel.send({ embeds: [error(`No quote with ID \`${args[0]}\` to delete`)] });
+    if (deleted === 1) await msg.channel.send({ embeds: [success(`Successfully delete quote with ID \`${args[0]}\``)] });
+    else await msg.channel.send({ embeds: [error(`No quote with ID \`${args[0]}\` to delete`)] });
 
 }
 

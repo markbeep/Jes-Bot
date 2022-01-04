@@ -28,7 +28,7 @@ getRandom.command = async function (msg, args) {
             });
         }
         if (quote == null) {
-            msg.channel.send({ embeds: [error(`There are no quotes on this server from \`${name}\``)] });
+            await msg.channel.send({ embeds: [error(`There are no quotes on this server from \`${name}\``)] });
             return;
         }
     } else {
@@ -39,11 +39,11 @@ getRandom.command = async function (msg, args) {
             }
         });
         if (quote == null) {
-            msg.channel.send({ embeds: [error(`There are no quotes on this server yet`)] });
+            await msg.channel.send({ embeds: [error(`There are no quotes on this server yet`)] });
             return;
         }
     }
-    msg.channel.send({ embeds: [quoteEmbed(quote)] });
+    await msg.channel.send({ embeds: [quoteEmbed(quote)] });
 }
 
 module.exports = getRandom;
