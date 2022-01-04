@@ -5,6 +5,7 @@ const Page = require("./quotePage");
 
 const all = new Command();
 
+
 all.command = async function (msg, args) {
     if (args.length === 0) {
         msg.channel.send({ embeds: [error(`No mention or name given to fetch quotes from`)] })

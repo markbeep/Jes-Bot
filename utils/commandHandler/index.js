@@ -23,13 +23,14 @@ async function commandHandler(message, client) {
     // if message author is bot
     if (message.author.bot) return;
 
+    let content = message.content.replace(/ {2,}/g, " "); // turns multiple spaces into a single space
     // check if the message starts with the prefix
-    let cmd = message.content.match(new RegExp(prefix + "(\\S+)"));
+    let cmd = content.match(new RegExp(prefix + "(\\S+)"));
     if (cmd == null) return;
     cmd = cmd[1]  // first index is the command without the prefix
 
     // check if there are any words after the prefix
-    let args = message.content.match(/\s(.+)/gm);
+    let args = content.match(/\s(.+)/gm);
     if (args == null) args = [];
     else args = args.map(e => e.trim()).join("\n").trim().split(" ");
     const { command, args: newArgs } = getCommandObject(cmd, args, aliases, commands);

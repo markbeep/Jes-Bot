@@ -23,6 +23,10 @@ module.exports = class Page {
         });
     }
 
+    copy() {
+        return this(this.userMessage, this.quotesList, this.embedTitle, this.description);
+    }
+
     #getPageEmbed() {
         return new MessageEmbed()
             .setColor("#eeac60")
@@ -87,22 +91,19 @@ function createPages(quotesList) {
     let pages = [];
     while (content.length > 0) {
         if (content.length <= 1000) {
-            pages.push(content);
+            pages.push(content.trim());
             content = "";
             break;
         }
-        // Looks for the last linebreak to make a break at
-        let lastIndex = content.lastIndexOf("\n", 1000);
-        if (lastIndex === -1) {  // there's no linebreak
-            lastIndex = content.lastIndexOf(" ", 1000);
-            if (lastIndex === -1) { // there's no space
-                pages.push(content.slice(0, 1000));
-                content = content.slice(1000);
-                continue;
-            }
+        // Looks for the last linebreak or space (not after the ranking) to make a break at
+        let lastIndex = content.lastIndexOf(/(?<!:\*\*)\s/, 1000);
+        if (lastIndex === -1) { // there's no space/linebreak
+            pages.push(content.slice(0, 1000).trim());
+            content = content.slice(1000).trim();
+            continue;
         }
-        pages.push(content.slice(0, lastIndex));
-        content = content.slice(lastIndex);
+        pages.push(content.slice(0, lastIndex).trim());
+        content = content.slice(lastIndex).trim();
     }
     return pages;
 }

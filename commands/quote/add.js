@@ -29,7 +29,7 @@ add.command = async function (msg, args, quoteAdder = null, sendMessage = true) 
         sendMessage && msg.channel.send({ embeds: [error(`Can't add quotes to names of commands:\`${name}\``)] });
         return;
     }
-    if (member != undefined && (member.id == msg.author.id || member.id == user.id)) {
+    if (member != undefined && (member.id == msg.author.id || member.id == msg.author.id)) {
         sendMessage && msg.channel.send({ embeds: [error(`Can't add quotes to yourself.`)] });
         return;
     }
