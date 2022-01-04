@@ -35,7 +35,7 @@ async function commandHandler(message, client) {
     else args = args.map(e => e.trim()).join("\n").trim().split(" ");
     const { command, args: newArgs } = getCommandObject(cmd, args, aliases, commands);
     if (command == null) return;  // this was not a correct command
-    command.command(message, newArgs);
+    command.command(message, newArgs, client);
 }
 
 module.exports = { commandHandler, commands, aliases };
