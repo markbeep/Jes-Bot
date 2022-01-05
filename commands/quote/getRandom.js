@@ -1,10 +1,16 @@
 const Command = require("../../utils/commandClass");
 const { QuoteModel, sequelize } = require("./quoteModel");
 const { error, quoteEmbed } = require("../../utils/embedTemplates");
+const { SlashCommandSubcommandBuilder } = require("@discordjs/builders");
 
 const getRandom = new Command();
 getRandom.description = "Gets a random quote from either the server or a user.";
 getRandom.usage = "[name | mention | user ID]";
+getRandom.slashCommand = new SlashCommandSubcommandBuilder()
+    .setName("random")
+    .setDescription("Get a random quote on this server")
+    .addUserOption(option => option.setName("user").setDescription("User to get a random quote from"))
+    .addIntegerOption(option => option.setName("name").setDescription("Name to get a random quote from"));
 
 getRandom.command = async function (msg, args) {
     let quote;

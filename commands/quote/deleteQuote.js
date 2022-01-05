@@ -2,11 +2,16 @@ const Command = require("../../utils/commandClass");
 const { QuoteModel } = require("./quoteModel");
 const { error, success } = require("../../utils/embedTemplates");
 const { Permissions } = require("discord.js");
+const { SlashCommandSubcommandBuilder } = require("@discordjs/builders");
 
 const deleteQuote = new Command();
 deleteQuote.aliases = ["del", "delete"];
 deleteQuote.description = `Deletes the quote with the given ID.`
 deleteQuote.usage = "(quote ID to delete)"
+deleteQuote.slashCommand = new SlashCommandSubcommandBuilder()
+    .setName("delete")
+    .setDescription("Delete a quote by its ID")
+    .addIntegerOption(option => option.setName("quoteid").setDescription("Quote ID to delete").setRequired(true));
 
 deleteQuote.command = async function (msg, args) {
     if (!msg.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {

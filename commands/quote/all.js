@@ -2,12 +2,18 @@ const Command = require("../../utils/commandClass");
 const { QuoteModel } = require("./quoteModel");
 const { error } = require("../../utils/embedTemplates");
 const Page = require("./quotePage");
+const { SlashCommandSubcommandBuilder } = require("@discordjs/builders");
 
 const all = new Command();
 all.description = `Gets all quotes from a user. If there are too many quotes, \
 the quotes are shown in a menu with buttons.
 *Note:* The message is removed after a minute of no button being pressed.`
 all.usage = "(name | mention | user ID)"
+all.slashCommand = new SlashCommandSubcommandBuilder()
+    .setName("all")
+    .setDescription("Show all quotes from a user")
+    .addUserOption(option => option.setName("user").setDescription("User to get all quotes from"))
+    .addStringOption(option => option.setName("name").setDescription("Name to get all quotes from"));
 
 all.command = async function (msg, args) {
     if (args.length === 0) {
