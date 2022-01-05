@@ -32,6 +32,7 @@ quote.command = async function (msg, args) {
     if (args.length === 0) {
         if (msg.type == "REPLY") {
             let replyMessage = await msg.fetchReference();
+            await replyMessage.author.fetch();
             add.command(msg, [replyMessage.author.id, replyMessage.content]);
             return;
         }
@@ -41,7 +42,7 @@ quote.command = async function (msg, args) {
     if (args.length === 1) {
         // first argument is a name, quoteID, userID or mention
         let member = msg.mentions.members.first();
-        if (member == undefined) member = await msg.guild.members.cache.get(args[0]);
+        if (member == undefined) member = await msg.guild.members.fetch(args[0]);
         if (member != undefined) {
             getRandom.command(msg, args);
             return;

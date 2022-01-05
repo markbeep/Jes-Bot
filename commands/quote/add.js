@@ -31,7 +31,7 @@ add.command = async function (msg, args, quoteAdder = null, sendMessage = true) 
         return;
     }
     let member = msg.mentions.members.first();
-    if (member == undefined) member = await msg.guild.members.cache.get(args[0]);
+    if (member == undefined) member = await msg.guild.members.fetch(args[0]);
     const name = (member == undefined) ? args[0] : member.user.username;
     const userId = (member == undefined) ? null : member.id;
     const quote = args.slice(1).join(" ");
