@@ -4,6 +4,7 @@ module.exports = class Command {
     subcommands;
     usage = "";
     description = "";
+    shortDescription = "";  // for the general help page
     aliasesDict;  // RESERVED for quick alias referencing
     // Path to a command: ex.: quote all => ["quote", "all"]
     commandPath = [];  // RESERVED, gets generated on its own

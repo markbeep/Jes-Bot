@@ -4,11 +4,15 @@ const { error, success } = require("../../utils/embedTemplates");
 const { addedQuoteId } = require("../../config.json");
 
 const add = new Command();
+add.description = `Adds a quote to a user.`
+add.usage = "(name | mention | user ID) (quote)"
 
 let blacklistedWords = [];
 function setBlackListedWords(commands) {
     Object.keys(commands).forEach(key => {
         blacklistedWords.push(key);
+        if (commands[key].aliases != null)
+            Object.values(commands[key].aliases).forEach(k => blacklistedWords.push(k));
         if (commands[key].subcommands != null)
             setBlackListedWords(commands[key].subcommands);
     });

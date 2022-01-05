@@ -3,6 +3,8 @@ const { QuoteModel, sequelize } = require("./quoteModel");
 const { error, quoteEmbed } = require("../../utils/embedTemplates");
 
 const getRandom = new Command();
+getRandom.description = "Gets a random quote from either the server or a user.";
+getRandom.usage = "[name | mention | user ID]";
 
 getRandom.command = async function (msg, args) {
     let quote;

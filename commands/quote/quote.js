@@ -4,12 +4,29 @@ const { add, setBlackListedWords } = require("./add");
 const get = require("./get");
 const getRandom = require("./getRandom");
 const deleteQuote = require("./deleteQuote");
+const { prefix } = require("../../config.json");
 
 const quote = new Command();
 quote.aliases = ["q"];
 quote.subcommands = { all, add, get, getRandom, deleteQuote };
-setBlackListedWords(quote.subcommands);  // ensures that not quote commands are used as quote names
 quote.usage = `[Quote ID | Name | <Subcommand>]`
+quote.description = `Sends a completely random quote from the server if all parameters are empty. \
+If only a name is given, it sends a random quote from that user.
+*Note: Quotes saved to a **user** (mention or user ID) also saves \
+the quote to the user's username. Quotes that are simply added to a name (no mention) will only be \
+viewable under that name.*
+If a reaction has the name \`addQuote\` (no matter the casing) it can be used to add messages as \
+quotes by reacting with that emote.
+__Some examples:__
+\`${prefix}quote\`   - sends a random quote from any user
+\`${prefix}quote bob\`   - sends a random quote from the **name** bob
+\`${prefix}quote bob haHaa\`   - adds "haHaa" as a quote to the **name** bob
+\`${prefix}quote @bob#1234 all\`   - displays all quotes from the **user** bob
+\`${prefix}quote 205704051856244737 23\`   - displays the 23rd indexed quote from the user with that ID
+\`${prefix}quote names\`   - displays all names that have a quote`
+quote.shortDescription = "Store and fetch quotes on your server."
+
+setBlackListedWords(quote.subcommands);  // ensures that not quote commands are used as quote names
 
 quote.command = async function (msg, args) {
     if (args.length === 0) {

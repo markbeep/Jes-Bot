@@ -6,7 +6,13 @@ const { prefix } = require("../../config.json");
 
 const help = new Command();
 help.aliases = ["h"];
-help.description = "Calls the help page.";
+help.description = `Calls the help page with all commands. An optional command will \
+show the in-depth help page of that command, if it exists. Command usages are similar \
+to the RegEx syntax:
+\`()\` means it's required, \`[]\` means its optional.
+Commands can also be abbreviated with their aliases. For example: \`${prefix}h q del\` \
+works instead of \`${prefix}help quote deleteQuote\`.`;
+help.shortDescription = "Calls the help page.";
 help.usage = "[command]";
 
 let commands;
@@ -34,11 +40,12 @@ help.command = async function (msg, args) {
 function setupHelp(cmds, alis) {
     commands = cmds;
     aliases = alis;
+    let desc = `Here are all the currently available commands listed:`
     helpPageEmbed = new MessageEmbed()
         .setColor("#6aa84f")
         .setTitle("Help Page")
-        .setDescription("Here are all the currently available commands listed:");
-    Object.keys(commands).forEach(k => helpPageEmbed.addField(k, (cmds[k].description.length == 0) ? "*No Description*" : cmds[k].description));
+        .setDescription(desc);
+    Object.keys(commands).forEach(k => helpPageEmbed.addField(`⮞ ${k}`, (cmds[k].shortDescription.length == 0) ? "*No Description*" : cmds[k].shortDescription));
     generateEmbeds(commands);
 }
 
@@ -63,7 +70,10 @@ function createEmbed(key, commands) {
         .setDescription((cmd.description.length == 0) ? "*No Description*" : cmd.description)
         .addField("Usage", `\`${prefix}${cmd.commandPath.join(" ")}${((cmd.usage.length > 0) ? " " : "") + cmd.usage}\``);
     if (cmd.aliases != null) embed.addField("Aliases", `\`${cmd.aliases.join(", ")}\``);
-    if (cmd.subcommands != null) embed.addField("Subcommands", `\`${Object.keys(cmd.subcommands).join(", ")}\``);
+    if (cmd.subcommands != null) {
+        embed.addField("Subcommands", `\`${Object.keys(cmd.subcommands).join(", ")}\``)
+        embed.setFooter(`View subcommands help with ${prefix}${cmd.commandPath.join(" ")} <subcommand>`);
+    };
     return embed;
 }
 

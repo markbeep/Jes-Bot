@@ -3,6 +3,8 @@ const { QuoteModel } = require("./quoteModel");
 const { error, quoteEmbed } = require("../../utils/embedTemplates");
 
 const get = new Command();
+get.description = "Gets a specific quote by ID.";
+get.usage = "(quote ID)";
 
 get.command = async function (msg, args) {
     if (args.length < 1) {

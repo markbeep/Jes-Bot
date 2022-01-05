@@ -5,6 +5,8 @@ const { Permissions } = require("discord.js");
 
 const deleteQuote = new Command();
 deleteQuote.aliases = ["del", "delete"];
+deleteQuote.description = `Deletes the quote with the given ID.`
+deleteQuote.usage = "(quote ID to delete)"
 
 deleteQuote.command = async function (msg, args) {
     if (!msg.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
@@ -17,12 +19,13 @@ deleteQuote.command = async function (msg, args) {
     }
     const deleted = await QuoteModel.destroy({
         where: {
-            quoteId: args[0]
+            quoteId: args[0],
+            guildId: msg.guild.id
         },
         force: true
     });
     if (deleted === 1) await msg.channel.send({ embeds: [success(`Successfully delete quote with ID \`${args[0]}\``)] });
-    else await msg.channel.send({ embeds: [error(`No quote with ID \`${args[0]}\` to delete`)] });
+    else await msg.channel.send({ embeds: [error(`No quote with ID \`${args[0]}\` on this server to delete`)] });
 
 }
 

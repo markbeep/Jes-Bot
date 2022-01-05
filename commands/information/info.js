@@ -1,7 +1,9 @@
 const Command = require("../../utils/commandClass");
 const { basic } = require("../../utils/embedTemplates");
 
-let info = new Command();
+const info = new Command();
+info.description = "Displays a variaty of statistics about the bot.";
+info.shortDescription = "Displays bot information & the bot invite link";
 
 info.command = async function (msg, args, client) {
     desc = `**Uptime:** \`${Math.round(client.uptime / 36e4) / 10}\` hours\n` // rounded to .1
