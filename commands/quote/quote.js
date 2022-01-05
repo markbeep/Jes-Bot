@@ -42,7 +42,9 @@ quote.command = async function (msg, args) {
     if (args.length === 1) {
         // first argument is a name, quoteID, userID or mention
         let member = msg.mentions.members.first();
-        if (member == undefined) member = await msg.guild.members.fetch(args[0]);
+        try {
+            if (member == undefined) member = await msg.guild.members.fetch(args[0]);
+        } catch (e) { }
         if (member != undefined) {
             getRandom.command(msg, args);
             return;

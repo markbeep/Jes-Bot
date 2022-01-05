@@ -15,7 +15,9 @@ all.command = async function (msg, args) {
         return;
     }
     let member = msg.mentions.members.first();
-    if (member == undefined) member = await msg.guild.members.fetch(args[0]);
+    try {
+        if (member == undefined) member = await msg.guild.members.fetch(args[0]);
+    } catch (e) { }
     const name = (member == undefined) ? args[0] : member.user.username;
     let quotes;
     if (member == undefined) {

@@ -10,7 +10,9 @@ getRandom.command = async function (msg, args) {
     let quote;
     if (args.length > 0) {  // get random from user
         let member = msg.mentions.members.first();
-        if (member == undefined) member = await msg.guild.members.fetch(args[0]);
+        try {
+            if (member == undefined) member = await msg.guild.members.fetch(args[0]);
+        } catch (e) { }
         const name = (member == undefined) ? args[0] : member.user.username;
         if (member == undefined) {  // its not a mention
             quote = await QuoteModel.findOne({
