@@ -14,7 +14,7 @@ checkFiles();  // makes sure all the needed files are here
 const { Client, Intents } = require("discord.js");
 const { commandHandler } = require("./utils/commandHandler");
 const handleReaction = require("./commands/quote/handleReaction");
-const handleInteraction = require("./commands/quote/handleInteraction");
+const { handleInteraction } = require("./commands/quote/handleInteraction");
 const registerSlashCommands = require("./utils/loadSlashCommands");
 
 const { token } = require("./config.json");
