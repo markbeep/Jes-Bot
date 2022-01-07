@@ -19,7 +19,6 @@ const registerSlashCommands = require("./utils/loadSlashCommands");
 
 const { token } = require("./config.json");
 
-registerSlashCommands();
 
 const client = new Client({
     intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS],
@@ -41,4 +40,5 @@ function sendStartupMessage() {
     let msg = "░".repeat(33 + client.user.username.length) + `\n░ ${text} ░\n` + "░".repeat(33 + client.user.username.length);
     console.log(msg);
     client.user.setPresence({ activities: [{ name: 'to ;help' }], status: 'idle' });
+    registerSlashCommands(client);
 }
