@@ -4,6 +4,8 @@ const get = require("./get");
 const getRandom = require("./getRandom");
 const deleteQuote = require("./deleteQuote");
 const { SlashCommandBuilder } = require("@discordjs/builders");
+const { QuoteModel } = require("./quoteModel");
+
 
 async function handleInteraction(interaction) {
     if (!interaction.isCommand()) return;
@@ -22,11 +24,33 @@ async function handleInteraction(interaction) {
             await add.interaction(interaction, quote, name);
             return;
         }
+        return;
+    }
+    if (commandName == "all") {
+        let subCommand = options.getSubcommand(false);
+        if (subCommand == "user") {
+            let user = options.getUser("user");
+            await all.interaction(interaction, user.username, user);
+            return;
+        } if (subCommand == "name") {
+            let name = options.getString("name");
+            await all.interaction(interaction, user.username, null);
+            return;
+        }
+        return;
     }
 }
 
-let slashCommands = [
-    new SlashCommandBuilder()
+async function getCommandsForGuild(guildId) {
+    return [
+        await getAdd(),
+        await getAll(guildId),
+    ]
+        .map(command => command.toJSON());
+}
+
+async function getAdd() {
+    return new SlashCommandBuilder()
         .setName("add")
         .setDescription("Add a quote to a user or name")
         .addSubcommand(subCommand =>
@@ -44,12 +68,33 @@ let slashCommands = [
                 .addStringOption(option =>
                     option.setName("name").setDescription("The name of the person you want to add a quote to").setRequired(true))
                 .addStringOption(option =>
-                    option.setName("quote").setDescription("The quote to add to the name").setRequired(true))),
+                    option.setName("quote").setDescription("The quote to add to the name").setRequired(true)));
+}
 
-    new SlashCommandBuilder()
+async function getAll(guildId) {
+    let quotes = await QuoteModel.findAll({
+        attributes: ["name"],
+        where: {
+            guildId: guildId
+        },
+        group: ["name"]
+    });
+    let names = quotes.filter(e => e.name != undefined).map(e => [e.name, e.name]);
+    return new SlashCommandBuilder()
         .setName("all")
         .setDescription("Display all quotes of a user or name")
-]
-    .map(command => command.toJSON());
+        .addSubcommand(subCommand =>
+            subCommand
+                .setName("user")
+                .setDescription("View all quotes of a user")
+                .addUserOption(option =>
+                    option.setName("user").setDescription("The user to view all quotes of").setRequired(true)))
+        .addSubcommand(subCommand =>
+            subCommand
+                .setName("name")
+                .setDescription("The name to view all quotes of")
+                .addStringOption(option =>
+                    option.setName("name").setDescription("The name to view all quotes of").setRequired(true).addChoices(names)))
+}
 
-module.exports = { handleInteraction, slashCommands }
+module.exports = { handleInteraction, getCommandsForGuild }

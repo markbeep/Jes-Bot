@@ -1,8 +1,9 @@
 const { MessageActionRow, MessageButton, MessageEmbed } = require("discord.js");
 
 module.exports = class Page {
-    constructor(userMessage, quotesList, embedTitle, description) {
+    constructor(userMessage, quotesList, embedTitle, description, interaction = null) {
         this.userMessage = userMessage;
+        this.interaction = interaction;
         this.quotesList = quotesList;
         this.embedTitle = embedTitle;
         this.description = description;
@@ -12,14 +13,25 @@ module.exports = class Page {
     }
 
     async start() {
-        this.ownMessage = await this.userMessage.channel.send({ embeds: [this.#getPageEmbed()], components: [this.#getPageButtons()] })
-        const filter = i => i.message.id == this.ownMessage.id;
-        const collector = this.userMessage.channel.createMessageComponentCollector({ filter, time: 60e3 });  // 60 seconds until timeout
+        if (this.interaction) {
+            this.ownMessage = await this.interaction.reply({ embeds: [this.#getPageEmbed()], components: [this.#getPageButtons()], fetchReply: true, ephemeral: true })
+        } else {
+            this.ownMessage = await this.userMessage.channel.send({ embeds: [this.#getPageEmbed()], components: [this.#getPageButtons()] })
+        }
+        let filter = i => i.message.id == this.ownMessage.id;
+        let collector;
+        if (this.interaction) {
+            collector = this.interaction.channel.createMessageComponentCollector({ filter, time: 60e3 });  // 60 seconds until timeout
+        } else {
+            collector = this.userMessage.channel.createMessageComponentCollector({ filter, time: 60e3 });  // 60 seconds until timeout
+        }
         collector.on("collect", interaction => this.#handleInteraction(interaction, collector));
         collector.on("end", () => {
             // the catch simply ignores the error if a message was already deleted
-            this.userMessage != undefined && this.userMessage.delete().catch(_ => _);
-            this.ownMessage != null && this.ownMessage.delete().catch(_ => _);
+            if (this.interaction) return;
+            this.userMessage?.delete().catch(_ => _);
+            this.ownMessage?.delete().catch(_ => _);
+
         });
     }
 
@@ -66,7 +78,7 @@ module.exports = class Page {
     }
 
     async #handleInteraction(i, collector) {
-        if (i.user.id != this.userMessage.author.id) {
+        if (this.interaction == null && i.user.id != this.userMessage.author.id) {
             i.reply({ content: "You can't control a Quote Menu not called by you!", ephemeral: true });
             return;
         }
@@ -78,15 +90,19 @@ module.exports = class Page {
             case "lastPageButton": this.pageCount = this.pages.length - 1; break;
             default: {
                 collector.stop();
+                if (this.interaction) {
+                    let embed = this.#getPageEmbed().setDescription("Quotes menu **closed**");
+                    i.update({ embeds: [embed], components: [] });
+                }
                 return;
             };
         }
-        i.update({ embeds: [this.#getPageEmbed()], components: [this.#getPageButtons()] });
+        await i.update({ embeds: [this.#getPageEmbed()], components: [this.#getPageButtons()] });
     }
 }
 
 function createPages(quotesList) {
-    let filteredQuotes = quotesList.map((q, i) => `**${i}:** ${cleanupQuoteString(q.quote)} \`[ID: ${q.quoteId}]\``)
+    let filteredQuotes = quotesList.map((q, i) => `**${i + 1}:** ${cleanupQuoteString(q.quote)} \`[ID: ${q.quoteId}]\``)
     let content = filteredQuotes.join("\n");
     let pages = [];
     while (content.length > 0) {

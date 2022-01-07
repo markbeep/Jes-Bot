@@ -49,4 +49,29 @@ all.command = async function (msg, args) {
     p.start();
 }
 
+all.interaction = async function (interaction, name, user = null) {
+    let quotes;
+    if (user == undefined) {
+        quotes = await QuoteModel.findAll({
+            where: {
+                name: name,
+                guildId: interaction.guild.id
+            }
+        });
+    } else {
+        quotes = await QuoteModel.findAll({
+            where: {
+                userId: user.id,
+                guildId: interaction.guild.id
+            }
+        });
+    }
+    if (quotes.length === 0) {
+        await interaction.reply({ embeds: [error(`The user \`${name}\` doesn't have any quotes`)], ephemeral: true })
+        return;
+    }
+    let p = new Page(null, quotes, "All Quotes", `All quotes from ${name}:`, interaction);
+    p.start();
+}
+
 module.exports = all;
