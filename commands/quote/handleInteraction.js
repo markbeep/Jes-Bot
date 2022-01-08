@@ -7,7 +7,19 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { QuoteModel } = require("./quoteModel");
 
 
+let allNames = {};  // stores all the name options
+async function addNames(guildId, names = []) {
+    if (allNames[guildId] == undefined) allNames[guildId] = {};
+    let uniqueNames = new Set(Object.values(allNames[guildId]).concat(names));
+    allNames[guildId] = Array.from(uniqueNames).map(e => ({ name: e, value: e }));
+}
+
 async function handleInteraction(interaction) {
+    if (interaction.isAutocomplete()) {
+        await interaction.respond(allNames[interaction.guild.id]);
+        return;
+    }
+
     if (!interaction.isCommand()) return;
 
     const { commandName, options } = interaction;
@@ -34,17 +46,17 @@ async function handleInteraction(interaction) {
             return;
         } if (subCommand == "name") {
             let name = options.getString("name");
-            await all.interaction(interaction, user.username, null);
+            await all.interaction(interaction, name, null);
             return;
         }
         return;
     }
 }
 
-async function getCommandsForGuild(guildId) {
+async function getCommands() {
     return [
         await getAdd(),
-        await getAll(guildId),
+        await getAll(),
     ]
         .map(command => command.toJSON());
 }
@@ -71,15 +83,7 @@ async function getAdd() {
                     option.setName("quote").setDescription("The quote to add to the name").setRequired(true)));
 }
 
-async function getAll(guildId) {
-    let quotes = await QuoteModel.findAll({
-        attributes: ["name"],
-        where: {
-            guildId: guildId
-        },
-        group: ["name"]
-    });
-    let names = quotes.filter(e => e.name != undefined).map(e => [e.name, e.name]);
+async function getAll() {
     return new SlashCommandBuilder()
         .setName("all")
         .setDescription("Display all quotes of a user or name")
@@ -94,7 +98,8 @@ async function getAll(guildId) {
                 .setName("name")
                 .setDescription("The name to view all quotes of")
                 .addStringOption(option =>
-                    option.setName("name").setDescription("The name to view all quotes of").setRequired(true).addChoices(names)))
+                    option.setName("name").setDescription("The name to view all quotes of").setRequired(true).setAutocomplete(true))
+        )
 }
 
-module.exports = { handleInteraction, getCommandsForGuild }
+module.exports = { handleInteraction, getCommands, addNames }
