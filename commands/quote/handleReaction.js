@@ -1,6 +1,6 @@
 const add = require("./add");
 
-async function handleReaction(reaction, user) {
+module.exports = async function handleReaction(reaction, user) {
     if (user.bot) return;  // ignores bot reactions
     if (reaction.partial) { // if the message isn't cached
         try {
@@ -13,5 +13,3 @@ async function handleReaction(reaction, user) {
     if (reaction.emoji.name.toLowerCase() != "addquote") return;
     add.command(reaction.message, [reaction.message.author.id, reaction.message.content], user, false);
 }
-
-module.exports = handleReaction;

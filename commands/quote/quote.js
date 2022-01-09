@@ -5,6 +5,7 @@ const get = require("./get");
 const getRandom = require("./getRandom");
 const deleteQuote = require("./deleteQuote");
 const { prefix } = require("../../config.json");
+const { SlashCommandBuilder } = require("@discordjs/builders");
 
 const quote = new Command();
 quote.aliases = ["q"];
@@ -25,6 +26,14 @@ __Some examples:__
 \`${prefix}quote 205704051856244737 23\`   - displays the 23rd indexed quote from the user with that ID
 \`${prefix}quote names\`   - displays all names that have a quote`
 quote.shortDescription = "Store and fetch quotes on your server."
+
+// Sets up the slash commands
+quote.slashCommand = new SlashCommandBuilder()
+    .setName('quote')
+    .setDescription("Display Quotes");
+Object.values(quote.subcommands)
+    .filter(sub => sub.slashCommand != null)
+    .forEach(sub => quote.slashCommand.addSubcommand(sub.slashCommand));
 
 setBlackListedWords(quote.subcommands);  // ensures that not quote commands are used as quote names
 
