@@ -42,3 +42,4 @@ function sendStartupMessage() {
     client.user.setPresence({ activities: [{ name: 'to ;help' }], status: 'idle' });
     registerSlashCommands(client);
 }
+

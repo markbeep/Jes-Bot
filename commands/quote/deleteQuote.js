@@ -34,4 +34,21 @@ deleteQuote.command = async function (msg, args) {
 
 }
 
+deleteQuote.interaction = async function (interaction, quoteId) {
+    if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
+        await interaction.reply({ embeds: [error("You don't have permissions to delete quotes. Requires `ADMINISTRATOR`.")], ephemeral: true });
+        return;
+    };
+    const deleted = await QuoteModel.destroy({
+        where: {
+            quoteId: quoteId,
+            guildId: interaction.guild.id
+        },
+        force: true
+    });
+    if (deleted === 1) await interaction.reply({ embeds: [success(`Successfully delete quote with ID \`${quoteId}\``)], ephemeral: true });
+    else await interaction.reply({ embeds: [error(`No quote with ID \`${quoteId}\` on this server to delete`)], ephemeral: true });
+
+}
+
 module.exports = deleteQuote;

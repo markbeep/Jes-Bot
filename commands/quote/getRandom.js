@@ -1,6 +1,7 @@
 const Command = require("../../utils/commandClass");
 const { QuoteModel, sequelize } = require("./quoteModel");
 const { error, quoteEmbed } = require("../../utils/embedTemplates");
+const { Sequelize } = require("sequelize");
 const { SlashCommandSubcommandBuilder } = require("@discordjs/builders");
 
 const getRandom = new Command();
@@ -24,7 +25,7 @@ getRandom.command = async function (msg, args) {
             quote = await QuoteModel.findOne({
                 order: sequelize.random(),
                 where: {
-                    name: args[0],
+                    name: { [Sequelize.Op.like]: args[0] },
                     guildId: msg.guild.id
                 }
             });
@@ -54,6 +55,47 @@ getRandom.command = async function (msg, args) {
         }
     }
     await msg.channel.send({ embeds: [quoteEmbed(quote)] });
+}
+
+getRandom.interaction = async function (interaction, name = null, user = null) {
+    let quote;
+    if (name != null) {  // get random from user
+        if (user == null) {  // its not a mention
+            quote = await QuoteModel.findOne({
+                order: sequelize.random(),
+                where: {
+                    name: { [Sequelize.Op.like]: name },
+                    guildId: interaction.guild.id
+                }
+            });
+            console.log(quote);
+        } else {
+            quote = await QuoteModel.findOne({
+                order: sequelize.random(),
+                where: {
+                    userId: user.id,
+                    guildId: interaction.guild.id
+                }
+            });
+        }
+        if (quote == null) {
+            await interaction.reply({ embeds: [error(`There are no quotes on this server from \`${name}\``)], ephemeral: true });
+            return;
+        }
+    } else {
+        quote = await QuoteModel.findOne({
+            order: sequelize.random(),
+            where: {
+                guildId: interaction.guild.id
+            }
+        });
+        if (quote == null) {
+            await interaction.reply({ embeds: [error(`There are no quotes on this server yet`)], ephemeral: true });
+            return;
+        }
+    }
+
+    await interaction.reply({ embeds: [quoteEmbed(quote)], ephemeral: true });
 }
 
 module.exports = getRandom;

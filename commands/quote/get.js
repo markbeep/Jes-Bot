@@ -27,7 +27,20 @@ get.command = async function (msg, args) {
         return;
     }
     await msg.channel.send({ embeds: [quoteEmbed(quote)] });
+}
 
+get.interaction = async function (interaction, quoteId) {
+    const quote = await QuoteModel.findOne({
+        where: {
+            quoteId: quoteId,
+            guildId: interaction.guild.id
+        }
+    });
+    if (quote == null) {
+        await interaction.reply({ embeds: [error(`No Quote found with the given ID`)], ephemeral: true });
+        return;
+    }
+    await interaction.reply({ embeds: [quoteEmbed(quote)], ephemeral: true });
 }
 
 module.exports = get;

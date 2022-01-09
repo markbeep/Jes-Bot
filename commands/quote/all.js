@@ -2,6 +2,7 @@ const Command = require("../../utils/commandClass");
 const { QuoteModel } = require("./quoteModel");
 const { error } = require("../../utils/embedTemplates");
 const Page = require("./quotePage");
+const { Sequelize } = require("sequelize");
 const { SlashCommandSubcommandBuilder } = require("@discordjs/builders");
 
 const all = new Command();
@@ -29,7 +30,7 @@ all.command = async function (msg, args) {
     if (member == undefined) {
         quotes = await QuoteModel.findAll({
             where: {
-                name: name,
+                name: { [Sequelize.Op.like]: name },
                 guildId: msg.guild.id
             }
         });
@@ -54,7 +55,7 @@ all.interaction = async function (interaction, name, user = null) {
     if (user == undefined) {
         quotes = await QuoteModel.findAll({
             where: {
-                name: name,
+                name: { [Sequelize.Op.like]: name },
                 guildId: interaction.guild.id
             }
         });
