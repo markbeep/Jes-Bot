@@ -1,4 +1,4 @@
-const add = require("./add");
+const { add } = require("./add");
 
 module.exports = async function handleReaction(reaction, user) {
     if (user.bot) return;  // ignores bot reactions
@@ -11,5 +11,5 @@ module.exports = async function handleReaction(reaction, user) {
     }
     // a quote simply needs to be called "addquote" to trigger quote adding
     if (reaction.emoji.name.toLowerCase() != "addquote") return;
-    add.command(reaction.message, [reaction.message.author.id, reaction.message.content], user, false);
+    await add.reaction(reaction.message, reaction.message.content, user);
 }

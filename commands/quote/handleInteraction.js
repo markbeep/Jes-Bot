@@ -4,29 +4,14 @@ const get = require("./get");
 const getRandom = require("./getRandom");
 const deleteQuote = require("./deleteQuote");
 const { SlashCommandBuilder } = require("@discordjs/builders");
-
-
-let allNames = {};  // stores all the name options
-async function addNames(guildId, names = []) {
-    if (allNames[guildId] == undefined) allNames[guildId] = {};
-    let uniqueNames = new Set(Object.values(allNames[guildId]).concat(names));
-    allNames[guildId] = Array.from(uniqueNames).map(e => ({ name: e, value: e }));
-}
-let allQuoteIds = {}  // stores all the quote IDs per server
-async function addQuoteIds(guildId, quoteIds = []) {
-    if (allQuoteIds[guildId] == undefined) allQuoteIds[guildId] = {};
-    let uniqueQuoteIds = new Set(Object.values(allQuoteIds[guildId]).concat(quoteIds));
-    allQuoteIds[guildId] = Array.from(uniqueQuoteIds).map(e => ({ name: "" + e, value: e }));
-}
-
-
+const { allNames, allQuoteIds } = require("./quoteCache");
 
 async function handleInteraction(interaction) {
-    console.log(interaction.id);
     // gives back the correct option when using a slash command with autocomplete
     if (interaction.isAutocomplete()) {
         const { commandName, options } = interaction;
         const value = options.getFocused();  // the typed value from the user
+        console.log(allNames);
         if (commandName == "all" || commandName == "random")
             await interaction.respond(allNames[interaction.guild.id].filter(e => e.name.toLowerCase().includes(value.toLowerCase())));
         if (commandName == "get" || commandName == "delete")
@@ -177,4 +162,4 @@ const randomCommand = new SlashCommandBuilder()
                 option.setName("user").setDescription("The user to get a random quote from").setRequired(true)));
 
 
-module.exports = { handleInteraction, getCommands, addNames, addQuoteIds }
+module.exports = { handleInteraction, getCommands }

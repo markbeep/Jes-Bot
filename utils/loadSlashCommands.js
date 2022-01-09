@@ -1,7 +1,8 @@
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { token } = require('../config.json');
-const { getCommands, addNames, addQuoteIds } = require("../commands/quote/handleInteraction");
+const { getCommands } = require("../commands/quote/handleInteraction");
+const { addNames, addQuoteIds } = require("../commands/quote/quoteCache");
 const fs = require("fs");
 const crypto = require("crypto");
 const { QuoteModel } = require("../commands/quote/quoteModel");

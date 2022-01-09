@@ -26,7 +26,7 @@ async function commandHandler(message, client) {
 
     let content = message.content.replace(/ {2,}/g, " "); // turns multiple spaces into a single space
     // check if the message starts with the prefix
-    let cmd = content.match(new RegExp("^" + prefix + "(\\S+)"));
+    let cmd = content.match(new RegExp("^\\" + prefix + "(\\S+)"));
     if (cmd == null) return;
     cmd = cmd[1]  // first index is the command without the prefix
 

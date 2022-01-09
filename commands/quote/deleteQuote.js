@@ -3,6 +3,7 @@ const { QuoteModel } = require("./quoteModel");
 const { error, success } = require("../../utils/embedTemplates");
 const { Permissions } = require("discord.js");
 const { SlashCommandSubcommandBuilder } = require("@discordjs/builders");
+const { removeName, removeQuoteId } = require("./quoteCache")
 
 const deleteQuote = new Command();
 deleteQuote.aliases = ["del", "delete"];
@@ -22,6 +23,12 @@ deleteQuote.command = async function (msg, args) {
         await msg.channel.send({ embeds: [error("No quote ID given. Don't know what to delete.")] });
         return;
     }
+    const quote = await QuoteModel.findOne({
+        where: {
+            quoteId: args[0],
+            guildId: msg.guild.id
+        },
+    })
     const deleted = await QuoteModel.destroy({
         where: {
             quoteId: args[0],
@@ -29,7 +36,11 @@ deleteQuote.command = async function (msg, args) {
         },
         force: true
     });
-    if (deleted === 1) await msg.channel.send({ embeds: [success(`Successfully delete quote with ID \`${args[0]}\``)] });
+    if (deleted === 1) {
+        await msg.channel.send({ embeds: [success(`Successfully delete quote with ID \`${args[0]}\``)] });
+        removeName(msg.guild.id, quote.name);
+        removeQuoteId(msg.guild.id, quote.quoteId);
+    }
     else await msg.channel.send({ embeds: [error(`No quote with ID \`${args[0]}\` on this server to delete`)] });
 
 }
@@ -39,6 +50,12 @@ deleteQuote.interaction = async function (interaction, quoteId) {
         await interaction.reply({ embeds: [error("You don't have permissions to delete quotes. Requires `ADMINISTRATOR`.")], ephemeral: true });
         return;
     };
+    const quote = await QuoteModel.findOne({
+        where: {
+            quoteId: quoteId,
+            guildId: interaction.guild.id
+        },
+    })
     const deleted = await QuoteModel.destroy({
         where: {
             quoteId: quoteId,
@@ -46,7 +63,11 @@ deleteQuote.interaction = async function (interaction, quoteId) {
         },
         force: true
     });
-    if (deleted === 1) await interaction.reply({ embeds: [success(`Successfully delete quote with ID \`${quoteId}\``)], ephemeral: true });
+    if (deleted === 1) {
+        await interaction.reply({ embeds: [success(`Successfully delete quote with ID \`${quoteId}\``)], ephemeral: true });
+        removeName(interaction.guild.id, quote.name);
+        removeQuoteId(interaction.guild.id, quote.quoteId);
+    }
     else await interaction.reply({ embeds: [error(`No quote with ID \`${quoteId}\` on this server to delete`)], ephemeral: true });
 
 }

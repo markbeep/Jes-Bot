@@ -9,5 +9,6 @@ module.exports = class Command {
     // Path to a command: ex.: quote all => ["quote", "all"]
     commandPath = [];  // RESERVED, gets generated on its own
     helpEmbed; // RESERVED, stores the help embed for the command
-    slashCommand;
+    interaction; // placeholder for interaction command
+    reaction; // placeholder for reaction command
 }
