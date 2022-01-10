@@ -39,7 +39,7 @@ function sendStartupMessage() {
     let text = "\033[92m✓\033[3;94m " + client.user.username + "\033[0m successfully started up! \033[92m✓\033[0m"
     let msg = "░".repeat(33 + client.user.username.length) + `\n░ ${text} ░\n` + "░".repeat(33 + client.user.username.length);
     console.log(msg);
-    client.user.setPresence({ activities: [{ name: 'to ;help' }] });
+    client.user.setPresence({ activities: [{ name: 'to ;help', type: 2 }] });  // 2 = listening to...
     registerSlashCommands(client);
 }
 
