@@ -44,7 +44,8 @@ function setupHelp(cmds, alis) {
     helpPageEmbed = new MessageEmbed()
         .setColor("#6aa84f")
         .setTitle("Help Page")
-        .setDescription(desc);
+        .setDescription(desc)
+        .setFooter(`See more info about a command with ${prefix}help <command>`);
     Object.keys(commands).forEach(k => helpPageEmbed.addField(`⮞ ${k}`, (cmds[k].shortDescription.length == 0) ? "*No Description*" : cmds[k].shortDescription));
     generateEmbeds(commands);
 }

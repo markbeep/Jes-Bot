@@ -1,5 +1,5 @@
 const commands = require("../../commands");  // all commands as an object
-const { prefix } = require("../../config.json");
+const { prefix, debug } = require("../../config.json");
 const getCommandObject = require("./getCommandObject");
 const generateAliases = require("./generateAliases");
 const generatePaths = require("./generatePaths");
@@ -36,11 +36,17 @@ async function commandHandler(message, client) {
     else args = args.map(e => e.trim()).join("\n").trim().split(" ");
     const { command, args: newArgs } = getCommandObject(cmd, args, aliases, commands);
     if (command == null) return;  // this was not a correct command
+    const red = "\033[91m";
+    const green = "\033[92m";
+    const orange = "\033[93m";
+    const esc = "\033[0m";
     try {
+        if (debug)
+            console.log(`${orange}${message.author.username}#${message.author.discriminator}`
+                + ` (${message.author.id})${esc}`
+                + ` used command: ${green}${content}${esc}`);
         await command.command(message, newArgs, client);
     } catch (e) {
-        let red = "\033[91m";
-        let esc = "\033[0m";
         console.error(`${red}ERROR${esc}\t${e.stack}`);
         // send the error in the channel
         try {
