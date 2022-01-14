@@ -64,7 +64,8 @@ quote.command = async function (msg, args) {
     }
     // anything with more than 1 argument is a quote being added or all
     if (args[1] == "all") {
-        all.command(msg, args[0]);
+        args.splice(1, 1);  // takes out the "all" argument
+        all.command(msg, args);
         return;
     }
     add.command(msg, args);
