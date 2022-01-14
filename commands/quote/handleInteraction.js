@@ -71,7 +71,6 @@ async function handleInteraction(interaction) {
             await getRandom.interaction(interaction);
         } else if (subCommand == "name") {
             let name = options.getString("name");
-            console.log("Name", name);
             await getRandom.interaction(interaction, name);
         } else if (subCommand == "user") {
             let user = options.getUser("user");

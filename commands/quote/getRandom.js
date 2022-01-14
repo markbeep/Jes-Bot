@@ -68,7 +68,6 @@ getRandom.interaction = async function (interaction, name = null, user = null) {
                     guildId: interaction.guild.id
                 }
             });
-            console.log(quote);
         } else {
             quote = await QuoteModel.findOne({
                 order: sequelize.random(),
